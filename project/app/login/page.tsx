@@ -24,7 +24,15 @@ export default function LoginPage() {
     setLoading(true);
     try {
       await signIn(email, password);
-      router.replace('/dashboard');
+      const token = localStorage.getItem('token');
+      const estRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/establishments/current`, {
+        headers: { 'Authorization': `Bearer ${token}` },
+      });
+      if (estRes.ok) {
+        router.replace('/dashboard');
+      } else {
+        router.replace('/onboarding');
+      }
     } catch (error: any) {
       toast({ title: 'Ошибка входа', description: error.message, variant: 'destructive' });
     }
@@ -46,9 +54,9 @@ export default function LoginPage() {
               <UtensilsCrossed className="w-10 h-10 text-white" />
             </div>
           </div>
-          <h1 className="text-4xl font-bold mb-4">РесторанOS</h1>
+          <h1 className="text-4xl font-bold mb-4">RestaurantOS</h1>
           <p className="text-orange-100 text-lg max-w-sm leading-relaxed">
-            Система управления рестораном для современных кафе и ресторанов.
+            Единая система управления для ресторанов, кафе, столовых и любого общепита.
           </p>
           <div className="mt-10 grid grid-cols-3 gap-4 text-center">
             {[
@@ -135,7 +143,10 @@ export default function LoginPage() {
           <div className="mt-8 p-4 bg-muted/50 rounded-xl border border-border">
             <p className="text-xs font-medium text-muted-foreground mb-2">Демо-данные</p>
             <div className="space-y-1 text-xs text-muted-foreground">
-              <p>Создайте аккаунт или войдите с демо-данными.</p>
+              <p>Ресторан: admin@restaurant.com / admin123</p>
+              <p>Кафе: admin@cafe.com / admin123</p>
+              <p>Столовая: admin@canteen.com / admin123</p>
+              <p className="pt-1 text-[10px] opacity-60">Создайте аккаунт или войдите с демо</p>
             </div>
           </div>
         </div>

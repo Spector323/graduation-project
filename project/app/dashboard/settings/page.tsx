@@ -8,14 +8,19 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { Separator } from '@/components/ui/separator';
-import { Settings, User, Bell, Shield, Save } from 'lucide-react';
+import { Settings, User, Bell, Shield, Save, Store } from 'lucide-react';
 
 export default function SettingsPage() {
-  const { user } = useAuth();
+  const { user, fetchUser } = useAuth();
   const { toast } = useToast();
   const [profileData, setProfileData] = useState({
     fullName: user?.fullName || '',
     email: user?.email || '',
+  });
+  const [establishmentData, setEstablishmentData] = useState({
+    name: '',
+    address: '',
+    phone: '',
   });
   const [passwordData, setPasswordData] = useState({
     currentPassword: '',
@@ -139,6 +144,46 @@ export default function SettingsPage() {
         </Card>
       </div>
 
+      {/* Establishment Info */}
+      {user?.establishment && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Store className="w-5 h-5" />
+              Заведение
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-1">
+                <Label className="text-xs text-muted-foreground">Название</Label>
+                <p className="font-medium">{user.establishment.name}</p>
+              </div>
+              <div className="space-y-1">
+                <Label className="text-xs text-muted-foreground">Тип</Label>
+                <p className="font-medium">
+                  {user.establishment.type === 'RESTAURANT' ? 'Ресторан' :
+                   user.establishment.type === 'CAFE' ? 'Кафе' :
+                   user.establishment.type === 'CANTEEN' ? 'Столовая' :
+                   user.establishment.type === 'COFFEE_SHOP' ? 'Кофейня' :
+                   user.establishment.type === 'BAKERY' ? 'Пекарня' :
+                   user.establishment.type === 'FAST_FOOD' ? 'Фастфуд' :
+                   user.establishment.type === 'PUB' ? 'Бар/Паб' : 'Другое'}
+                </p>
+              </div>
+              <div className="space-y-1">
+                <Label className="text-xs text-muted-foreground">Адрес</Label>
+                <p className="font-medium">{user.establishment.address || 'Не указан'}</p>
+              </div>
+              <div className="space-y-1">
+                <Label className="text-xs text-muted-foreground">Телефон</Label>
+                <p className="font-medium">{user.establishment.phone || 'Не указан'}</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Password Change */}
       <Card>
         <CardHeader>
@@ -218,7 +263,7 @@ export default function SettingsPage() {
           <Separator />
           <div className="text-xs text-muted-foreground">
             <p>RestaurantOS — Дипломный проект</p>
-            <p>Built with Next.js, Express, PostgreSQL, and Prisma</p>
+            <p>Сделано на Next.js, Express, PostgreSQL и Prisma</p>
           </div>
         </CardContent>
       </Card>

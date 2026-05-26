@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { MenuItem, Table } from '@/lib/supabase';
+import { MenuItem, Table } from '@/lib/api-client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
@@ -130,10 +130,10 @@ export default function CreateOrderPage() {
   return (
     <div className="p-6 space-y-6">
       <div className="flex items-center gap-4">
-        <Button variant="ghost" onClick={() => router.back()}>
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Back
-        </Button>
+              <Button variant="ghost" onClick={() => router.back()}>
+                  <ArrowLeft className="w-4 h-4 mr-2" />
+                  Назад
+                </Button>
         <div>
           <h1 className="text-2xl font-bold">Новый заказ</h1>
           <p className="text-muted-foreground text-sm mt-1">
@@ -148,7 +148,7 @@ export default function CreateOrderPage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Utensils className="w-5 h-5" />
-              Menu Items
+              Блюда
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -166,7 +166,7 @@ export default function CreateOrderPage() {
                   <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
                     {item.description}
                   </p>
-                  <p className="text-lg font-bold text-primary mt-2">${item.price.toFixed(2)}</p>
+                  <p className="text-lg font-bold text-primary mt-2">{item.price.toFixed(0)} ₽</p>
                 </div>
               ))}
             </div>
@@ -177,7 +177,7 @@ export default function CreateOrderPage() {
         <div className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle className="text-base">Order Details</CardTitle>
+              <CardTitle className="text-base">Детали заказа</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
@@ -202,10 +202,10 @@ export default function CreateOrderPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="notes">Order Notes</Label>
+                <Label htmlFor="notes">Примечание</Label>
                 <Textarea
                   id="notes"
-                  placeholder="Special requests, allergies, etc."
+                  placeholder="Особые пожелания, аллергии..."
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
                   rows={3}
@@ -216,13 +216,13 @@ export default function CreateOrderPage() {
 
           <Card>
             <CardHeader>
-              <CardTitle className="text-base">Cart ({cart.length} items)</CardTitle>
+              <CardTitle className="text-base">Корзина ({cart.length} шт.)</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               {cart.length === 0 ? (
-                <p className="text-sm text-muted-foreground text-center py-4">
-                  No items in cart
-                </p>
+                  <p className="text-sm text-muted-foreground text-center py-4">
+                    Корзина пуста
+                  </p>
               ) : (
                 <>
                   <div className="space-y-2 max-h-64 overflow-y-auto">
@@ -231,7 +231,7 @@ export default function CreateOrderPage() {
                         <div className="flex-1">
                           <p className="font-medium text-sm">{item.name}</p>
                           <p className="text-xs text-muted-foreground">
-                            ${item.price.toFixed(2)} each
+                            {item.price.toFixed(0)} ₽ × {item.quantity}
                           </p>
                         </div>
                         <div className="flex items-center gap-2">
@@ -264,12 +264,12 @@ export default function CreateOrderPage() {
 
                   <div className="border-t border-border pt-3 space-y-2">
                     <div className="flex items-center justify-between">
-                      <span className="text-muted-foreground">Subtotal</span>
-                      <span className="font-semibold">${total.toFixed(2)}</span>
+                      <span className="text-muted-foreground">Промежуточный итог</span>
+                      <span className="font-semibold">{total.toFixed(0)} ₽</span>
                     </div>
                     <div className="flex items-center justify-between text-lg">
-                      <span className="font-bold">Total</span>
-                      <span className="font-bold text-primary">${total.toFixed(2)}</span>
+                      <span className="font-bold">Итого</span>
+                      <span className="font-bold text-primary">{total.toFixed(0)} ₽</span>
                     </div>
                   </div>
 
@@ -279,7 +279,7 @@ export default function CreateOrderPage() {
                       className="flex-1"
                       onClick={clearCart}
                     >
-                      Clear
+                      Очистить
                     </Button>
                     <Button
                       className="flex-1"

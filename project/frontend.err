@@ -1,0 +1,52 @@
+Browserslist: caniuse-lite is outdated. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ X lib\api-client.ts (136:17) @ localStorage
+ X ReferenceError: localStorage is not defined
+    at new ApiClient (./lib/api-client.ts:63:22)
+    at eval (./lib/api-client.ts:267:13)
+    at (ssr)/./lib/api-client.ts (C:\Users\Admin\Desktop\R-P-123\project\.next\server\app\register\page.js:217:1)
+    at __webpack_require__ (C:\Users\Admin\Desktop\R-P-123\project\.next\server\webpack-runtime.js:33:42)
+    at eval (./app/register/page.tsx:14:73)
+    at (ssr)/./app/register/page.tsx (C:\Users\Admin\Desktop\R-P-123\project\.next\server\app\register\page.js:129:1)
+    at __webpack_require__ (C:\Users\Admin\Desktop\R-P-123\project\.next\server\webpack-runtime.js:33:42)
+[0m [90m 134 | [39m  constructor(baseUrl[33m:[39m string) {[0m
+[0m [90m 135 | [39m    [36mthis[39m[33m.[39mbaseUrl [33m=[39m baseUrl[33m;[39m[0m
+[0m[31m[1m>[22m[39m[90m 136 | [39m    [36mthis[39m[33m.[39mtoken [33m=[39m localStorage[33m.[39mgetItem([32m'token'[39m)[33m;[39m[0m
+[0m [90m     | [39m                [31m[1m^[22m[39m[0m
+[0m [90m 137 | [39m  }[0m
+[0m [90m 138 | [39m[0m
+[0m [90m 139 | [39m  setToken(token[33m:[39m string [33m|[39m [36mnull[39m) {[0m
+ X lib\api-client.ts (136:17) @ localStorage
+ X ReferenceError: localStorage is not defined
+    at new ApiClient (./lib/api-client.ts:63:22)
+    at eval (./lib/api-client.ts:267:13)
+    at (ssr)/./lib/api-client.ts (C:\Users\Admin\Desktop\R-P-123\project\.next\server\app\register\page.js:217:1)
+    at __webpack_require__ (C:\Users\Admin\Desktop\R-P-123\project\.next\server\webpack-runtime.js:33:42)
+    at eval (./app/register/page.tsx:14:73)
+    at (ssr)/./app/register/page.tsx (C:\Users\Admin\Desktop\R-P-123\project\.next\server\app\register\page.js:129:1)
+    at __webpack_require__ (C:\Users\Admin\Desktop\R-P-123\project\.next\server\webpack-runtime.js:33:42)
+[0m [90m 134 | [39m  constructor(baseUrl[33m:[39m string) {[0m
+[0m [90m 135 | [39m    [36mthis[39m[33m.[39mbaseUrl [33m=[39m baseUrl[33m;[39m[0m
+[0m[31m[1m>[22m[39m[90m 136 | [39m    [36mthis[39m[33m.[39mtoken [33m=[39m localStorage[33m.[39mgetItem([32m'token'[39m)[33m;[39m[0m
+[0m [90m     | [39m                [31m[1m^[22m[39m[0m
+[0m [90m 137 | [39m  }[0m
+[0m [90m 138 | [39m[0m
+[0m [90m 139 | [39m  setToken(token[33m:[39m string [33m|[39m [36mnull[39m) {[0m
+ X lib\api-client.ts (136:17) @ localStorage
+ X ReferenceError: localStorage is not defined
+    at new ApiClient (./lib/api-client.ts:63:22)
+    at eval (./lib/api-client.ts:267:13)
+    at (ssr)/./lib/api-client.ts (C:\Users\Admin\Desktop\R-P-123\project\.next\server\app\register\page.js:217:1)
+    at __webpack_require__ (C:\Users\Admin\Desktop\R-P-123\project\.next\server\webpack-runtime.js:33:42)
+    at eval (./app/register/page.tsx:14:73)
+    at (ssr)/./app/register/page.tsx (C:\Users\Admin\Desktop\R-P-123\project\.next\server\app\register\page.js:129:1)
+    at __webpack_require__ (C:\Users\Admin\Desktop\R-P-123\project\.next\server\webpack-runtime.js:33:42)
+[0m [90m 134 | [39m  constructor(baseUrl[33m:[39m string) {[0m
+[0m [90m 135 | [39m    [36mthis[39m[33m.[39mbaseUrl [33m=[39m baseUrl[33m;[39m[0m
+[0m[31m[1m>[22m[39m[90m 136 | [39m    [36mthis[39m[33m.[39mtoken [33m=[39m localStorage[33m.[39mgetItem([32m'token'[39m)[33m;[39m[0m
+[0m [90m     | [39m                [31m[1m^[22m[39m[0m
+[0m [90m 137 | [39m  }[0m
+[0m [90m 138 | [39m[0m
+[0m [90m 139 | [39m  setToken(token[33m:[39m string [33m|[39m [36mnull[39m) {[0m

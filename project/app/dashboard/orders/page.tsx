@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Order, OrderStatus } from '@/lib/supabase';
+import { Order, OrderStatus } from '@/lib/api-client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -116,7 +116,7 @@ export default function OrdersPage() {
                                 </span>
                               </div>
                               <div>
-                                <p className="font-semibold">Order #{order.id.slice(0, 8)}</p>
+                                <p className="font-semibold">Заказ #{order.id.slice(0, 8)}</p>
                                 <p className="text-sm text-muted-foreground">
                                   {order.waiter?.fullName || 'Неизвестно'} • {format(new Date(order.createdAt), 'HH:mm')}
                                 </p>

@@ -2,26 +2,26 @@ const prisma = require('../config/database');
 
 exports.getAllReservations = async (req, res) => {
   try {
-    const { status } = req.query;
+    if (!req.establishmentId) {
+      return res.status(400).json({ error: 'Заведение не определено' });
+    }
 
-    const where = {};
+    const { status } = req.query;
+    const where = { establishmentId: req.establishmentId };
     if (status) {
       where.status = status;
     }
 
     const reservations = await prisma.reservation.findMany({
       where,
-      include: {
-        table: true,
-        user: true,
-      },
+      include: { table: true, user: true },
       orderBy: { reservedAt: 'asc' },
     });
 
     res.json(reservations);
   } catch (error) {
-    console.error('Get all reservations error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error('Get reservations error:', error);
+    res.status(500).json({ error: 'Не удалось загрузить бронирования' });
   }
 };
 
@@ -30,7 +30,18 @@ exports.createReservation = async (req, res) => {
     const { tableId, customerName, customerPhone, reservedAt, partySize, notes } = req.body;
 
     if (!customerName || !reservedAt) {
-      return res.status(400).json({ error: 'Customer name and reservation time are required' });
+      return res.status(400).json({
+        error: 'Имя клиента и время бронирования обязательны',
+      });
+    }
+
+    if (tableId) {
+      const table = await prisma.restaurantTable.findFirst({
+        where: { id: tableId, establishmentId: req.establishmentId },
+      });
+      if (!table) {
+        return res.status(400).json({ error: 'Стол не найден' });
+      }
     }
 
     const reservation = await prisma.reservation.create({
@@ -43,10 +54,9 @@ exports.createReservation = async (req, res) => {
         notes: notes || '',
         status: 'PENDING',
         userId: req.userId,
+        establishmentId: req.establishmentId,
       },
-      include: {
-        table: true,
-      },
+      include: { table: true },
     });
 
     if (tableId) {
@@ -56,10 +66,10 @@ exports.createReservation = async (req, res) => {
       });
     }
 
-    res.status(201).json({ message: 'Reservation created successfully', reservation });
+    res.status(201).json(reservation);
   } catch (error) {
     console.error('Create reservation error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: 'Не удалось создать бронирование' });
   }
 };
 
@@ -68,28 +78,33 @@ exports.updateReservation = async (req, res) => {
     const { id } = req.params;
     const { status, tableId } = req.body;
 
-    const reservation = await prisma.reservation.update({
+    const reservation = await prisma.reservation.findFirst({
+      where: { id, establishmentId: req.establishmentId },
+    });
+    if (!reservation) {
+      return res.status(404).json({ error: 'Бронирование не найдено' });
+    }
+
+    const updated = await prisma.reservation.update({
       where: { id },
       data: {
         ...(status && { status }),
         ...(tableId !== undefined && { tableId }),
       },
-      include: {
-        table: true,
-      },
+      include: { table: true },
     });
 
-    if (status === 'CONFIRMED' && reservation.tableId) {
+    if (status === 'CONFIRMED' && updated.tableId) {
       await prisma.restaurantTable.update({
-        where: { id: reservation.tableId },
+        where: { id: updated.tableId },
         data: { status: 'RESERVED' },
       });
     }
 
-    res.json({ message: 'Reservation updated successfully', reservation });
+    res.json(updated);
   } catch (error) {
     console.error('Update reservation error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: 'Не удалось обновить бронирование' });
   }
 };
 
@@ -97,14 +112,18 @@ exports.deleteReservation = async (req, res) => {
   try {
     const { id } = req.params;
 
-    await prisma.reservation.delete({
-      where: { id },
+    const reservation = await prisma.reservation.findFirst({
+      where: { id, establishmentId: req.establishmentId },
     });
+    if (!reservation) {
+      return res.status(404).json({ error: 'Бронирование не найдено' });
+    }
 
-    res.json({ message: 'Reservation deleted successfully' });
+    await prisma.reservation.delete({ where: { id } });
+    res.json({ message: 'Бронирование удалено' });
   } catch (error) {
     console.error('Delete reservation error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: 'Не удалось удалить бронирование' });
   }
 };
 
@@ -117,21 +136,16 @@ exports.getTodayReservations = async (req, res) => {
 
     const reservations = await prisma.reservation.findMany({
       where: {
-        reservedAt: {
-          gte: today,
-          lt: tomorrow,
-        },
+        establishmentId: req.establishmentId,
+        reservedAt: { gte: today, lt: tomorrow },
       },
-      include: {
-        table: true,
-        user: true,
-      },
+      include: { table: true, user: true },
       orderBy: { reservedAt: 'asc' },
     });
 
     res.json(reservations);
   } catch (error) {
     console.error('Get today reservations error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: 'Не удалось получить сегодняшние бронирования' });
   }
 };

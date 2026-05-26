@@ -16,14 +16,15 @@ import {
   X,
   ChefHat,
   Settings,
-  PlusCircle,
+  Coffee,
+  Store,
 } from 'lucide-react';
 
 const navigation = [
   { name: 'Главная', href: '/dashboard', icon: LayoutDashboard, roles: ['ADMIN', 'MANAGER', 'WAITER', 'COOK'] },
-  { name: 'Меню', href: '/dashboard/menu', icon: Utensils, roles: ['ADMIN', 'MANAGER', 'WAITER'] },
+  { name: 'Меню', href: '/dashboard/menu', icon: Utensils, roles: ['ADMIN', 'MANAGER'] },
+  { name: 'Работа официанта', href: '/dashboard/waiter', icon: Coffee, roles: ['WAITER', 'ADMIN', 'MANAGER'] },
   { name: 'Столы', href: '/dashboard/tables', icon: Table, roles: ['ADMIN', 'MANAGER', 'WAITER'] },
-  { name: 'Новый заказ', href: '/dashboard/create-order', icon: PlusCircle, roles: ['ADMIN', 'MANAGER', 'WAITER'] },
   { name: 'Заказы', href: '/dashboard/orders', icon: ClipboardList, roles: ['ADMIN', 'MANAGER', 'WAITER', 'COOK'] },
   { name: 'Кухня', href: '/dashboard/kitchen', icon: ChefHat, roles: ['COOK', 'ADMIN'] },
   { name: 'Бронь', href: '/dashboard/reservations', icon: CalendarDays, roles: ['ADMIN', 'MANAGER', 'WAITER'] },
@@ -65,9 +66,14 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <div className="flex items-center justify-between p-4 border-b border-border">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                <Utensils className="w-5 h-5 text-primary-foreground" />
+                <Store className="w-5 h-5 text-primary-foreground" />
               </div>
-              <span className="text-lg font-bold">РесторанOS</span>
+              <div>
+                <span className="text-lg font-bold">RestaurantOS</span>
+                {user?.establishment && (
+                  <p className="text-xs text-muted-foreground leading-tight">{user.establishment.name}</p>
+                )}
+              </div>
             </div>
             <button
               onClick={() => setSidebarOpen(false)}

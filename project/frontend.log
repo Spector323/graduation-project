@@ -1,0 +1,11 @@
+  ▲ Next.js 13.5.1
+  - Local:        http://localhost:3000
+  - Environments: .env.local
+
+ ✓ Ready in 2.7s
+ ✓ Compiled /page in 2.8s (485 modules)
+ ✓ Compiled in 391ms (253 modules)
+ ✓ Compiled /login/page in 621ms (547 modules)
+ ✓ Compiled /not-found in 372ms (538 modules)
+ ✓ Compiled /register/page in 390ms (666 modules)
+ ✓ Compiled /onboarding/page in 435ms (682 modules)

@@ -11,7 +11,11 @@ export default function Home() {
   useEffect(() => {
     if (!loading) {
       if (user) {
-        router.replace('/dashboard');
+        if (user.establishmentId) {
+          router.replace('/dashboard');
+        } else {
+          router.replace('/onboarding');
+        }
       } else {
         router.replace('/login');
       }
@@ -22,7 +26,7 @@ export default function Home() {
     <div className="flex items-center justify-center min-h-screen bg-background">
       <div className="flex flex-col items-center gap-3">
         <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-        <p className="text-muted-foreground text-sm">Loading RestaurantOS...</p>
+        <p className="text-muted-foreground text-sm">Загрузка RestaurantOS...</p>
       </div>
     </div>
   );

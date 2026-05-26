@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Order, OrderStatus } from '@/lib/supabase';
+import { Order, OrderStatus } from '@/lib/api-client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -92,7 +92,7 @@ export default function KitchenPage() {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">New Orders</p>
+                <p className="text-sm text-muted-foreground">Новые</p>
                 <p className="text-2xl font-bold">{orders.filter((o) => o.status === 'NEW').length}</p>
               </div>
               <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/40 rounded-lg flex items-center justify-center">
@@ -105,7 +105,7 @@ export default function KitchenPage() {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">Cooking</p>
+                <p className="text-sm text-muted-foreground">Готовятся</p>
                 <p className="text-2xl font-bold">{orders.filter((o) => o.status === 'COOKING').length}</p>
               </div>
               <div className="w-10 h-10 bg-orange-100 dark:bg-orange-900/40 rounded-lg flex items-center justify-center">
@@ -118,7 +118,7 @@ export default function KitchenPage() {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">Ready</p>
+                <p className="text-sm text-muted-foreground">Готовы</p>
                 <p className="text-2xl font-bold">{orders.filter((o) => o.status === 'READY').length}</p>
               </div>
               <div className="w-10 h-10 bg-green-100 dark:bg-green-900/40 rounded-lg flex items-center justify-center">
@@ -178,7 +178,7 @@ export default function KitchenPage() {
                   {order.notes && (
                     <div className="p-2 bg-muted rounded-lg">
                       <p className="text-xs text-muted-foreground">
-                        <span className="font-semibold">Note:</span> {order.notes}
+                          <span className="font-semibold">Заметка:</span> {order.notes}
                       </p>
                     </div>
                   )}

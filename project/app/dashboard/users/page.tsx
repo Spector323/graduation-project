@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/lib/auth-context';
-import { User } from '@/lib/supabase';
+import { User } from '@/lib/api-client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -20,10 +20,10 @@ import { Badge } from '@/components/ui/badge';
 import { Users, Plus, Eye, Edit2, Trash2, User as UserIcon } from 'lucide-react';
 
 const ROLES = [
-  { value: 'ADMIN', label: 'Admin' },
-  { value: 'MANAGER', label: 'Manager' },
-  { value: 'WAITER', label: 'Waiter' },
-  { value: 'COOK', label: 'Cook' },
+  { value: 'ADMIN', label: 'Администратор' },
+  { value: 'MANAGER', label: 'Менеджер' },
+  { value: 'WAITER', label: 'Официант' },
+  { value: 'COOK', label: 'Повар' },
 ];
 
 export default function UsersPage() {

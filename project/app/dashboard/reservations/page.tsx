@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Reservation, Table } from '@/lib/supabase';
+import { Reservation, Table } from '@/lib/api-client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
@@ -95,7 +95,7 @@ export default function ReservationsPage() {
         throw new Error(error.error || 'Failed to create reservation');
       }
     } catch (error: any) {
-      toast({ title: 'Error', description: error.message, variant: 'destructive' });
+      toast({ title: 'Ошибка', description: error.message, variant: 'destructive' });
     }
   }
 
@@ -166,7 +166,7 @@ export default function ReservationsPage() {
               </div>
               <div>
                 <p className="text-2xl font-bold">{stats.total}</p>
-                <p className="text-sm text-muted-foreground">Total</p>
+                <p className="text-sm text-muted-foreground">Всего</p>
               </div>
             </div>
           </CardContent>
@@ -205,7 +205,7 @@ export default function ReservationsPage() {
               </div>
               <div>
                 <p className="text-2xl font-bold">{stats.today}</p>
-                <p className="text-sm text-muted-foreground">Today</p>
+                <p className="text-sm text-muted-foreground">Сегодня</p>
               </div>
             </div>
           </CardContent>
@@ -353,7 +353,7 @@ export default function ReservationsPage() {
                   </SelectTrigger>
                   <SelectContent>
                     {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
-                      <SelectItem key={n} value={n.toString()}>{n} {n === 1 ? 'guest' : 'guests'}</SelectItem>
+                      <SelectItem key={n} value={n.toString()}>{n} {n === 1 ? 'гость' : 'гостей'}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -378,17 +378,17 @@ export default function ReservationsPage() {
               </Select>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="notes">Notes</Label>
+              <Label htmlFor="notes">Примечание</Label>
               <Textarea
                 id="notes"
                 value={formData.notes}
                 onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                placeholder="Special requests, allergies, etc."
+                placeholder="Особые пожелания, аллергии..."
                 rows={3}
               />
             </div>
             <Button type="submit" className="w-full">
-              Create Reservation
+              Создать бронирование
             </Button>
           </form>
         </DialogContent>

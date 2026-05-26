@@ -3,13 +3,20 @@ const prisma = require('../config/database');
 
 exports.getAllUsers = async (req, res) => {
   try {
+    const where = {};
+    if (req.establishmentId) {
+      where.establishmentId = req.establishmentId;
+    }
+
     const users = await prisma.user.findMany({
+      where,
       select: {
         id: true,
         email: true,
         fullName: true,
         role: true,
         active: true,
+        establishmentId: true,
         createdAt: true,
       },
       orderBy: { createdAt: 'desc' },
@@ -17,8 +24,8 @@ exports.getAllUsers = async (req, res) => {
 
     res.json(users);
   } catch (error) {
-    console.error('Get all users error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error('Get users error:', error);
+    res.status(500).json({ error: 'Не удалось загрузить сотрудников' });
   }
 };
 
@@ -27,12 +34,12 @@ exports.createUser = async (req, res) => {
     const { email, password, fullName, role } = req.body;
 
     if (!email || !password || !fullName || !role) {
-      return res.status(400).json({ error: 'All fields are required' });
+      return res.status(400).json({ error: 'Все поля обязательны' });
     }
 
     const existingUser = await prisma.user.findUnique({ where: { email } });
     if (existingUser) {
-      return res.status(400).json({ error: 'User with this email already exists' });
+      return res.status(400).json({ error: 'Пользователь с таким email уже существует' });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -43,6 +50,7 @@ exports.createUser = async (req, res) => {
         password: hashedPassword,
         fullName,
         role,
+        establishmentId: req.establishmentId,
       },
       select: {
         id: true,
@@ -54,13 +62,10 @@ exports.createUser = async (req, res) => {
       },
     });
 
-    res.status(201).json({
-      message: 'User created successfully',
-      user,
-    });
+    res.status(201).json(user);
   } catch (error) {
     console.error('Create user error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: 'Не удалось создать сотрудника' });
   }
 };
 
@@ -69,7 +74,14 @@ exports.updateUser = async (req, res) => {
     const { id } = req.params;
     const { fullName, role, active } = req.body;
 
-    const user = await prisma.user.update({
+    const user = await prisma.user.findFirst({
+      where: { id, establishmentId: req.establishmentId },
+    });
+    if (!user && req.userRole !== 'ADMIN') {
+      return res.status(404).json({ error: 'Сотрудник не найден' });
+    }
+
+    const updated = await prisma.user.update({
       where: { id },
       data: {
         ...(fullName && { fullName }),
@@ -85,10 +97,10 @@ exports.updateUser = async (req, res) => {
       },
     });
 
-    res.json({ message: 'User updated successfully', user });
+    res.json(updated);
   } catch (error) {
     console.error('Update user error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: 'Не удалось обновить сотрудника' });
   }
 };
 
@@ -96,13 +108,17 @@ exports.deleteUser = async (req, res) => {
   try {
     const { id } = req.params;
 
-    await prisma.user.delete({
-      where: { id },
+    const user = await prisma.user.findFirst({
+      where: { id, establishmentId: req.establishmentId },
     });
+    if (!user && req.userRole !== 'ADMIN') {
+      return res.status(404).json({ error: 'Сотрудник не найден' });
+    }
 
-    res.json({ message: 'User deleted successfully' });
+    await prisma.user.delete({ where: { id } });
+    res.json({ message: 'Сотрудник удалён' });
   } catch (error) {
     console.error('Delete user error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: 'Не удалось удалить сотрудника' });
   }
 };
