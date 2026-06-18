@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const prisma = require('../config/database');
 
 exports.authenticate = (req, res, next) => {
   try {
@@ -13,6 +14,17 @@ exports.authenticate = (req, res, next) => {
     req.userId = decoded.userId;
     req.userRole = decoded.role;
     req.establishmentId = decoded.establishmentId;
+
+    // Fetch user info for audit logging (non-blocking)
+    prisma.user.findUnique({
+      where: { id: decoded.userId },
+      select: { email: true, fullName: true },
+    }).then(user => {
+      if (user) {
+        req.userEmail = user.email;
+        req.userName = user.fullName;
+      }
+    }).catch(() => {});
 
     next();
   } catch (error) {

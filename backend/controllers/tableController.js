@@ -1,4 +1,5 @@
 const prisma = require('../config/database');
+const { emitToEstablishment } = require('../socket');
 
 exports.getAllTables = async (req, res) => {
   try {
@@ -42,6 +43,7 @@ exports.createTable = async (req, res) => {
       },
     });
 
+    emitToEstablishment(req.establishmentId, 'table:created', table);
     res.status(201).json(table);
   } catch (error) {
     console.error('Create table error:', error);
@@ -71,6 +73,7 @@ exports.updateTable = async (req, res) => {
       },
     });
 
+    emitToEstablishment(req.establishmentId, 'table:updated', updated);
     res.json(updated);
   } catch (error) {
     console.error('Update table error:', error);
@@ -90,6 +93,7 @@ exports.deleteTable = async (req, res) => {
     }
 
     await prisma.restaurantTable.delete({ where: { id } });
+    emitToEstablishment(req.establishmentId, 'table:deleted', { id });
     res.json({ message: 'Стол удалён' });
   } catch (error) {
     console.error('Delete table error:', error);

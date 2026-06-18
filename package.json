@@ -1,0 +1,17 @@
+{
+  "name": "restaurantos",
+  "version": "1.0.0",
+  "private": true,
+  "description": "RestaurantOS — Diploma Project",
+  "scripts": {
+    "postinstall": "npm install --prefix backend && cd backend && npx prisma migrate deploy && npx prisma db seed && npm install --prefix ../frontend",
+    "dev": "concurrently \"npm run dev --prefix backend\" \"npm run dev --prefix frontend\"",
+    "start": "concurrently \"npm run dev --prefix backend\" \"npm run dev --prefix frontend\"",
+    "migrate": "cd backend && npx prisma migrate deploy",
+    "seed": "cd backend && npx prisma db seed",
+    "studio": "cd backend && npx prisma studio"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

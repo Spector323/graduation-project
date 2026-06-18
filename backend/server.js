@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const http = require('http');
 require('dotenv').config();
 
 const authRoutes = require('./routes/authRoutes');
@@ -9,8 +10,16 @@ const menuRoutes = require('./routes/menuRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const reservationRoutes = require('./routes/reservationRoutes');
 const establishmentRoutes = require('./routes/establishmentRoutes');
+const analyticsRoutes = require('./routes/analytics');
+const platformRoutes = require('./routes/platform');
+const auditRoutes = require('./routes/audit');
+const shiftRoutes = require('./routes/shiftRoutes');
+const pinAuthRoutes = require('./routes/pinAuthRoutes');
+const { errorHandler } = require('./middleware/errorHandler');
+const { setupSocket } = require('./socket');
 
 const app = express();
+const server = http.createServer(app);
 const PORT = process.env.PORT || 5000;
 
 // Middleware
@@ -29,6 +38,11 @@ app.use('/api/menu', menuRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/reservations', reservationRoutes);
 app.use('/api/establishments', establishmentRoutes);
+app.use('/api/analytics', analyticsRoutes);
+app.use('/api/platform', platformRoutes);
+app.use('/api/audit', auditRoutes);
+app.use('/api/shifts', shiftRoutes);
+app.use('/api/pin', pinAuthRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {
@@ -36,15 +50,13 @@ app.get('/api/health', (req, res) => {
 });
 
 // Error handling middleware
-app.use((err, req, res, next) => {
-  console.error('Error:', err);
-  res.status(err.status || 500).json({
-    error: err.message || 'Internal server error',
-  });
-});
+app.use(errorHandler);
 
-app.listen(PORT, () => {
+setupSocket(server);
+
+server.listen(PORT, () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
+  console.log(`📡 Socket.IO running on ws://localhost:${PORT}`);
   console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
 });
 

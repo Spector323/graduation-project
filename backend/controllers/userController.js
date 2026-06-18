@@ -1,5 +1,6 @@
 const bcrypt = require('bcryptjs');
 const prisma = require('../config/database');
+const { emitToEstablishment } = require('../socket');
 
 exports.getAllUsers = async (req, res) => {
   try {
@@ -18,11 +19,16 @@ exports.getAllUsers = async (req, res) => {
         active: true,
         establishmentId: true,
         createdAt: true,
+        pinCode: true,
       },
       orderBy: { createdAt: 'desc' },
     });
 
-    res.json(users);
+    res.json(users.map(u => ({
+      ...u,
+      hasPin: !!u.pinCode,
+      pinCode: u.pinCode ? '****' : null,
+    })));
   } catch (error) {
     console.error('Get users error:', error);
     res.status(500).json({ error: 'Не удалось загрузить сотрудников' });
@@ -62,6 +68,7 @@ exports.createUser = async (req, res) => {
       },
     });
 
+    emitToEstablishment(req.establishmentId, 'user:created', user);
     res.status(201).json(user);
   } catch (error) {
     console.error('Create user error:', error);
@@ -97,6 +104,7 @@ exports.updateUser = async (req, res) => {
       },
     });
 
+    emitToEstablishment(req.establishmentId, 'user:updated', updated);
     res.json(updated);
   } catch (error) {
     console.error('Update user error:', error);
@@ -116,6 +124,7 @@ exports.deleteUser = async (req, res) => {
     }
 
     await prisma.user.delete({ where: { id } });
+    emitToEstablishment(req.establishmentId, 'user:deleted', { id });
     res.json({ message: 'Сотрудник удалён' });
   } catch (error) {
     console.error('Delete user error:', error);

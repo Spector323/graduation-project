@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Restaurant Management System API - University Diploma Project",
   "main": "server.js",
+  "prisma": {
+    "seed": "node prisma/seed.js"
+  },
   "scripts": {
     "dev": "nodemon server.js",
     "start": "node server.js",
@@ -12,7 +15,12 @@
     "prisma:push": "prisma db push",
     "prisma:seed": "node prisma/seed.js"
   },
-  "keywords": ["restaurant", "management", "pos", "diploma"],
+  "keywords": [
+    "restaurant",
+    "management",
+    "pos",
+    "diploma"
+  ],
   "author": "Student Team",
   "license": "MIT",
   "dependencies": {
@@ -21,7 +29,8 @@
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
-    "jsonwebtoken": "^9.0.2"
+    "jsonwebtoken": "^9.0.2",
+    "socket.io": "^4.8.3"
   },
   "devDependencies": {
     "nodemon": "^3.0.2",

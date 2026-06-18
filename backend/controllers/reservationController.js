@@ -1,4 +1,5 @@
 const prisma = require('../config/database');
+const { emitToEstablishment } = require('../socket');
 
 exports.getAllReservations = async (req, res) => {
   try {
@@ -66,6 +67,10 @@ exports.createReservation = async (req, res) => {
       });
     }
 
+    emitToEstablishment(req.establishmentId, 'reservation:created', reservation);
+    if (tableId) {
+      emitToEstablishment(req.establishmentId, 'table:updated', { id: tableId, status: 'RESERVED' });
+    }
     res.status(201).json(reservation);
   } catch (error) {
     console.error('Create reservation error:', error);
@@ -101,6 +106,7 @@ exports.updateReservation = async (req, res) => {
       });
     }
 
+    emitToEstablishment(req.establishmentId, 'reservation:updated', updated);
     res.json(updated);
   } catch (error) {
     console.error('Update reservation error:', error);
@@ -120,6 +126,7 @@ exports.deleteReservation = async (req, res) => {
     }
 
     await prisma.reservation.delete({ where: { id } });
+    emitToEstablishment(req.establishmentId, 'reservation:deleted', { id });
     res.json({ message: 'Бронирование удалено' });
   } catch (error) {
     console.error('Delete reservation error:', error);

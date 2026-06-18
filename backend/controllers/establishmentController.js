@@ -1,4 +1,17 @@
 const prisma = require('../config/database');
+const { emitToEstablishment } = require('../socket');
+
+exports.getAll = async (req, res) => {
+  try {
+    const establishments = await prisma.establishment.findMany({
+      orderBy: { name: 'asc' },
+    });
+    res.json(establishments);
+  } catch (error) {
+    console.error('Get establishments error:', error);
+    res.status(500).json({ error: 'Ошибка загрузки заведений' });
+  }
+};
 
 // TODO: добавить валидацию на дубликаты
 
@@ -80,6 +93,7 @@ exports.update = async (req, res) => {
       data: data,
     });
 
+    emitToEstablishment(user.establishmentId, 'establishment:updated', establishment);
     res.json(establishment);
   } catch (error) {
     console.log('Ошибка обновления:', error);

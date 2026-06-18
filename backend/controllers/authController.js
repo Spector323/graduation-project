@@ -29,13 +29,15 @@ exports.register = async (req, res) => {
       establishmentId = est.id;
     }
 
+    const userRole = role === 'PLATFORM_OWNER' ? 'PLATFORM_OWNER' : (role || 'WAITER');
+
     const user = await prisma.user.create({
       data: {
         email: email,
         password: hashedPassword,
         fullName: fullName,
-        role: role || 'WAITER',
-        establishmentId: establishmentId,
+        role: userRole,
+        establishmentId: userRole === 'PLATFORM_OWNER' ? null : establishmentId,
       },
       select: {
         id: true, email: true, fullName: true,
